@@ -1,0 +1,119 @@
+body{
+ font-size: 14px;
+ font-family: Calibri;
+ /* overflow: hidden; */
+}
+.wrapper{width: 100%}
+.top-menu{position: relative}
+.clients-table{margin-top: 70px}
+.bg-image-1 {
+    background: url(../image/_bg.jpg);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-attachment: initial;
+    background-repeat: no-repeat;
+    background-color: #ffffff;
+	min-height: 100%;
+	opacity: 0.8;
+	z-index: -1
+}
+.navbar{
+ margin-bottom: 0px;
+}
+.overlay-color {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.8);
+	height: 100%;
+}
+.header-section-1 .detail {
+    margin-top: 40px;
+}
+.header-section-1 .section-separator {
+    padding-top: 187px;
+}
+.section-separator {
+    display: block;
+    padding-top: 145px;
+    padding-bottom: 145px;
+}
+.front{ 
+  z-index: 1000;
+  background-color: #edf3f7;
+ }
+ .project-item .each-project .each-project-inner {
+    margin-bottom: 90px;
+}
+.section-header {
+    margin-bottom: 70px;
+    text-align: center;
+}
+footer{height: 40px; background-color: #ccc;padding-top: 40px}
+.cover{background-image: url(../image/1.jpg);min-height: 300px}
+.cover2{background-image: url(../image/2.jpg);min-height: 300px}
+.cover3{background-image: url(../image/3.jpg);min-height: 300px}
+.cover4{background-image: url(../image/4.jpg);min-height: 300px}
+#error{margin-top: 50px}
+.each-project{padding-top: 20px;    padding-bottom: 45px;}
+.container-half-right {
+    right: 0;
+    background-position: top right;
+}
+.cover {
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.background-light {
+    background-color: #ffffff;
+}
+.container-half-left {
+    left: 0;
+    background-position: top left;
+}
+
+.container-half {
+    position: absolute;
+    vertical-align: middle;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+}
+.content-half {
+    position: relative;
+}
+
+.features-section-1 .features-icon {
+    font-size: 60px;
+    display: block;
+    margin-bottom: 55px;
+}
+.features-section-1 .each-features .inner {
+    margin-bottom: 30px;
+    padding: 70px 55px;
+    -webkit-transition: all 0.4s ease-out;
+    -moz-transition: all 0.4s ease-out;
+    -o-transition: all 0.4s ease-out;
+    -ms-transition: all 0.4s ease-out;
+    transition: all 0.4s ease-out;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -o-transform-style: preserve-3d;
+    -ms-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.features-section-1 .title {
+    margin-top: 0px;
+}
+h6 {
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: 400;
+}
+.features-section-1 .detail {
+    margin-top: 24px;
+}
+.s-features{border: 1px solid #ccc;min-height: 380px}
