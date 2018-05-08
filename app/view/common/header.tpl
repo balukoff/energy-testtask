@@ -1,14 +1,13 @@
 <html>
 <title>Тестовое задание для ООО "Энергия"</title>
 <head>
-<script language='javascript' src='content/js/jquery-2.1.1.min.js'></script>
-<link rel='stylesheet' href='content/stylesheet/bootstrap.min.css'>
-<script language='javascript' src='content/js/bootstrap.min.js'></script>
-<link rel='stylesheet' href='content/stylesheet/custom.css'>
+<script language='javascript' src='<?=HOST;?>content/js/jquery-2.1.1.min.js'></script>
+<link rel='stylesheet' href='<?=HOST;?>content/stylesheet/bootstrap.min.css'>
+<script language='javascript' src='<?=HOST;?>content/js/bootstrap.min.js'></script>
+<link rel='stylesheet' href='<?=HOST;?>content/stylesheet/custom.css'>
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
-
 <div class="navbar navbar-default navbar-fixed-top top-menu">
       <div class="container">
         <div class="navbar-header">

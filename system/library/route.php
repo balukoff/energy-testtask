@@ -1,4 +1,5 @@
 <? 
+// singletone 
 class Route
 {
 	protected static $_instance;
@@ -21,6 +22,7 @@ class Route
 		$action_name = 'index';
 		
 		$routes = explode('/', $_SERVER['REQUEST_URI']);
+		//print_r($routes);
 		// получаем имя контроллера
 		if ( !empty($routes[2]) )
 		{	
@@ -32,11 +34,9 @@ class Route
 		{
 			$action_name = $routes[3];
 		}
-		// добавляем префиксы
 		$model_name = $controller_name;
 		$controller_name = $controller_name;
 		//$action_name = $action_name;
-		// подцепляем файл с классом модели (файла модели может и не быть)
 
 		$model_file = strtolower($model_name).'.php';
 		$model_path = DIR_APP."model/".$model_file;
@@ -45,9 +45,9 @@ class Route
 			include DIR_APP."model/".$model_file;
 		}
 
-		// подцепляем файл с классом контроллера
 		$controller_file = strtolower($controller_name).'.php';
 		$controller_path = DIR_APP."controller/".$controller_file;
+		//print DIR_APP."controller/".$controller_file;
 		if(file_exists($controller_path))
 		{
 			include DIR_APP."controller/".$controller_file;
@@ -65,14 +65,13 @@ class Route
 			$controller->$action();
 		}
 		else{
-			// здесь также разумнее было бы кинуть исключение
 			Route::ErrorPage404();
 		}
 	
 	}
 	function ErrorPage404()
 	{
-        $host = 'http://'.$_SERVER['HTTP_HOST'].'/energy/';
+        $host = 'http://'.$_SERVER['HTTP_HOST'].'/energy-testtask/';
         header('HTTP/1.1 404 Not Found');
 		header("Status: 404 Not Found");
 		header('Location:'.$host.'notfound');

@@ -7,7 +7,6 @@
    data: {id: client_id},
    dataType: 'json',
    success: function(data){
-    //console.log(data);
 	var rows = JSON.parse(data);
 
 	var html = '<table class="table table-hovered table-bordered">'+

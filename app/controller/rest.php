@@ -17,20 +17,26 @@ final class Rest extends Controller
 	 return isset($_POST['id'])?$_POST['id']:false;
 	}
 	
+	private function sendCURL($link, $options){
+	 foreach($options as $option => $value){curl_setopt($link, $option, $value);}
+	 return curl_exec($link);	
+	}
+	
 	// method send delete-request to api and kills client by ID
 	public function deleteClient(){
 	 $id = $this->getID();
 	 if (!$id) {echo 'error getting client ID'; return;}
 	 if ($state = $this->loginToSandBox()){
 			$ch = $this->session;
-			curl_setopt($ch, CURLOPT_URL, SANDBOX_URL.$this->account_id.'/clients/'.$id.'?token='.$this->token);
-			curl_setopt($ch, CURLOPT_HEADER, 'Accept: application/json;');
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-			$out = curl_exec($ch);
+			$data = array( CURLOPT_URL     => SANDBOX_URL . $this->account_id . '/clients/' . $id . '?token=' . $this->token, 
+						   CURLOPT_HEADER   => 'Accept: application/json;',
+						   CURLOPT_TIMEOUT  => 30,
+						   CURLOPT_RETURNTRANSFER => true,
+						   CURLOPT_CUSTOMREQUEST  => "DELETE"
+			);
+
 			header('Content-Type: application/json');
-			echo json_encode($out);
+			echo $this->sendCurl($ch, $data);
 	 }else
 	  echo json_encode(array('message' => 'Error operation'));
 	}
@@ -41,14 +47,15 @@ final class Rest extends Controller
 	 if (!$id) {echo 'error getting client ID'; return;}
 	 if ($state = $this->loginToSandBox()){
 			$ch = $this->session;
-			curl_setopt($ch, CURLOPT_URL, SANDBOX_URL.$this->account_id.'/clients/'.$id.'?token='.$this->token.'&id='.$id.'&accountId='.$this->account_id);
-			curl_setopt($ch, CURLOPT_HEADER, 'Accept: application/json;');
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-			$out = curl_exec($ch);
 			header('Content-Type: application/json');
-			echo json_encode($out);
-	 }else
+			$data = array(
+					 CURLOPT_URL   => SANDBOX_URL . $this->account_id . '/clients/' . $id . '?token=' . $this->token . '&id=' . $id . '&accountId=' . $this->account_id, 
+					 CURLOPT_HEADER   => 'Accept: application/json;',
+					 CURLOPT_RETURNTRANSFER => true,
+					 CURLOPT_TIMEOUT  => 20
+					);
+			echo $this->sendCurl($ch, $data);
+	}else
 	 echo json_encode(array('message' => 'Error operation'));
 	}
 	
@@ -56,15 +63,17 @@ final class Rest extends Controller
 	public function getCities(){
 	if($session = curl_init()){
 			$this->session = $session;
-			curl_setopt($session, CURLOPT_URL, SANDBOX_URL.'cities?lang=ru');
-			curl_setopt($session, CURLOPT_HEADER, 'Content-Type: application/json; charset=UTF-8');
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($session, CURLOPT_TIMEOUT,300);
-			curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($session, CURLOPT_SSL_VERIFYHOST, false);
-			$out = curl_exec($session);
+			$data = array(
+					 CURLOPT_URL      => SANDBOX_URL.'cities?lang=ru', 
+					 CURLOPT_HEADER   => 'Content-Type: application/json; charset=UTF-8',
+					 CURLOPT_RETURNTRANSFER => 1,
+					 CURLOPT_TIMEOUT  => 300, 
+					 CURLOPT_SSL_VERIFYPEER => false,
+					 CURLOPT_SSL_VERIFYHOST => false
+					);
+			
 			header('Content-Type: application/json');
-			echo json_encode($out);
+			echo json_encode($this->sendCurl($session, $data));
 			return true;
 	}else
 	print 'error: Curl is not initialized' ;
@@ -76,19 +85,20 @@ final class Rest extends Controller
 	 if ($state = $this->loginToSandBox()){
 			$ch = $this->session;
 			if ($data['operation'] == 'create')
-			$url = SANDBOX_URL.$this->account_id.'/clients?token='.$this->token; else
-			$url = SANDBOX_URL.$this->account_id.'/clients/'.$data['id'].'?token='.$this->token;
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_HEADER, 'Content-Type: application/json; Accept: application/json;');
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-			if ($data['operation'] == 'create')
-			curl_setopt($ch, CURLOPT_POST, true);
+			$url = SANDBOX_URL.$this->account_id.'/clients?token='.$this->token; 
 			else
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-			
-			curl_setopt($ch, CURLOPT_POSTFIELDS, 
-			            json_encode(array("title" => $data['title'],
+			$url = SANDBOX_URL.$this->account_id.'/clients/'.$data['id'].'?token='.$this->token;
+			$params = array(
+					CURLOPT_URL            => $url, 
+					CURLOPT_HEADER         => 'Content-Type: application/json; Accept: application/json;',
+					CURLOPT_RETURNTRANSFER => 1, 
+					CURLOPT_TIMEOUT		 => 20,
+			);
+			if ($data['operation'] == 'create')
+			$params[CURLOPT_POST] = true; //curl_setopt($ch, CURLOPT_POST, true);
+			else
+			$params[CURLOPT_CUSTOMREQUEST] = 'PUT';
+			$params[CURLOPT_POSTFIELDS] = json_encode(array("title" => $data['title'],
 										  "fullTitle" => $data['fullTitle'],
 									      "idCity" => (int)$data['idCity'],
 										  "address" => $data['address'],
@@ -100,10 +110,10 @@ final class Rest extends Controller
 										  "createDate" => 0,
 										  "modifyDate" => 0
 							              )
-									));
-			$out = curl_exec($ch);
+									);
+			//$out = curl_exec($ch);
 			header('Content-Type: application/json');
-			echo json_encode($out);
+			echo json_encode($this->sendCurl($ch, $params));
 	 }else
 	  echo $state;
 	}
@@ -111,18 +121,19 @@ final class Rest extends Controller
 	// returns client List from api
 	public function ClientList(){
 	//GET /{accountId}/clients
-     if ($state = $this->loginToSandBox()){
+		if ($state = $this->loginToSandBox()){
 	if( $ch = curl_init() ) {
-			curl_setopt($ch, CURLOPT_URL, SANDBOX_URL.$this->account_id.'/clients?token='.$this->token);
-			curl_setopt($ch, CURLOPT_HEADER, FALSE);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-			$out = curl_exec($ch);
 			header('Content-Type: application/json');
-			echo json_encode($out);
-	} 
+			$data = array(
+					 CURLOPT_URL   => SANDBOX_URL . $this->account_id . '/clients?token=' . $this->token, 
+					 CURLOPT_HEADER   => false,
+					 CURLOPT_RETURNTRANSFER => 1,
+					 CURLOPT_TIMEOUT  => 10,
+					 CURLOPT_SSL_VERIFYPEER => false,
+					 CURLOPT_SSL_VERIFYHOST => false
+					);
+			echo $this->sendCurl($ch, $data);
+    	} 
 	 }else
 	  echo $state;
 	}
@@ -132,14 +143,17 @@ final class Rest extends Controller
 	private function loginToSandBox(){
 	if( $session = curl_init() ) {
 			$this->session = $session;
-			curl_setopt($session, CURLOPT_URL, SANDBOX_URL.'login?user='.SANDBOX_LOGIN.'&password='.SANDBOX_PASSWORD);
-			curl_setopt($session, CURLOPT_HEADER, null);
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($session, CURLOPT_TIMEOUT, 30);
-			curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($session, CURLOPT_SSL_VERIFYHOST, false);
-			$out = curl_exec($session);
+			$data = array(
+					 CURLOPT_URL   => SANDBOX_URL.'login?user='.SANDBOX_LOGIN.'&password='.SANDBOX_PASSWORD, 
+					 CURLOPT_HEADER   => false,
+					 CURLOPT_RETURNTRANSFER => 1,
+					 CURLOPT_TIMEOUT  => 10,
+					 CURLOPT_SSL_VERIFYPEER => false,
+					 CURLOPT_SSL_VERIFYHOST => false
+					);
+			$out = $this->sendCurl($session, $data);
 			$out = json_decode($out);
+
 			if ($out->token){
 			 $this->token = $out->token;
 			 $this->account_id = $out->accountId;
